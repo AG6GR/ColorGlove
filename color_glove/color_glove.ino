@@ -91,21 +91,21 @@ void setup() {
     
     // Stepper setup
     stepper.setSpeed(60);
-
+    
     // Initialize APDS-9960 (configure I2C and initial values)
     if ( apds.init() ) {
-      Serial.println(F("APDS-9960 initialization complete"));
+        Serial.println(F("APDS-9960 initialization complete"));
     } else {
-      Serial.println(F("Something went wrong during APDS-9960 init!"));
+        Serial.println(F("Something went wrong during APDS-9960 init!"));
     }
     
     // Start running the APDS-9960 light sensor (no interrupts)
     if ( apds.enableLightSensor(false) ) {
-      Serial.println(F("Light sensor is now running"));
+        Serial.println(F("Light sensor is now running"));
     } else {
-      Serial.println(F("Something went wrong during light sensor init!"));
+        Serial.println(F("Something went wrong during light sensor init!"));
     }
-
+    
     //Testing
     saturation = 128;
     brightness = 128;
@@ -117,7 +117,7 @@ void loop() {
     sensorValH = analogRead(ADC_H_RING);
     sensorValS = analogRead(ADC_S_SLIDER);
     sensorValB = analogRead(ADC_V_SLIDER);
-
+    
     //hue = (millis()/10) % 359;
     //saturation = (millis()/10) % 255;
     //brightness = (millis()/10) % 255;
@@ -137,43 +137,43 @@ void loop() {
     {
         // Get color from color sensor, save in hue,saturation,value variables
         if (  !apds.readAmbientLight(ambient_light) ||
-          !apds.readRedLight(red_light) ||
-          !apds.readGreenLight(green_light) ||
-          !apds.readBlueLight(blue_light) ) 
+            !apds.readRedLight(red_light) ||
+        !apds.readGreenLight(green_light) ||
+        !apds.readBlueLight(blue_light) ) 
         {
-          Serial.println("Error reading light values");
+            Serial.println("Error reading light values");
         } 
         else 
         {
-          /*
-          Serial.print("Ambient: ");
-          Serial.print(ambient_light);
-          Serial.print(" Red: ");
-          Serial.print(red_light);
-          Serial.print(" Green: ");
-          Serial.print(green_light);
-          Serial.print(" Blue: ");
-          Serial.println(blue_light);
-          */
-
-          RGBtoHSV(map(red_light, 0,ambient_light,0,255), 
-            map(green_light, 0,ambient_light,0,255), 
-            map(blue_light, 0,ambient_light,0,255));
-          Serial.println("Hue: " + String(hue) + " Saturation: " + String(saturation) + " Brightness: " + String(brightness));
-          saturation = 255;
-          brightness = 255;
+            /*
+            Serial.print("Ambient: ");
+            Serial.print(ambient_light);
+            Serial.print(" Red: ");
+            Serial.print(red_light);
+            Serial.print(" Green: ");
+            Serial.print(green_light);
+            Serial.print(" Blue: ");
+            Serial.println(blue_light);
+            */
+            
+            RGBtoHSV(map(red_light, 0,ambient_light,0,255), 
+                map(green_light, 0,ambient_light,0,255), 
+                map(blue_light, 0,ambient_light,0,255));
+            Serial.println("Hue: " + String(hue) + " Saturation: " + String(saturation) + " Brightness: " + String(brightness));
+            saturation = 255;
+            brightness = 255;
         }
         // Set dial
         stepperTarget = map(hue, 0, 359, 0, STEPPER_STEPS);
         if (stepperPosition < stepperTarget)
         {
-          stepper.step(min(3, stepperTarget - stepperPosition));
-          stepperPosition += min(3, stepperTarget - stepperPosition);
+            stepper.step(min(3, stepperTarget - stepperPosition));
+            stepperPosition += min(3, stepperTarget - stepperPosition);
         }
         else
         {
-          stepper.step(max(-3, stepperTarget - stepperPosition));
-          stepperPosition += max(-3, stepperTarget - stepperPosition);
+            stepper.step(max(-3, stepperTarget - stepperPosition));
+            stepperPosition += max(-3, stepperTarget - stepperPosition);
         }
         
         // Set sliders
@@ -328,7 +328,7 @@ void RGBtoHSV(int r_val, int g_val, int b_val)
 	else
 		h = 4 + ( r - g ) / delta;	// between magenta & cyan
 	h *= 60;				// degrees
-  h += 180;
+    h += 180;
 	if( h < 0 )
 		h += 360;
 	hue = ((int)h) % 360;
