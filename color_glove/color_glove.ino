@@ -221,7 +221,7 @@ void setSlider(int pin_1, int pin_2, int pin_pwm, int value)
     int pwmlevel = abs(value);
     //Serial.println("Setting: " + String(pin_1) + "," + String(pin_2) + "," + String(value));
     // Set controller direction
-    if (pwmlevel < 1)
+    if (pwmlevel < 2)
     {
         // Disengage if pwmlevel is very small
         pwmlevel = 0;
