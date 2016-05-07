@@ -29,7 +29,7 @@
 #define PIN_STEPPER_B1 22
 #define PIN_STEPPER_B2 23
 
-Stepper stepper = Stepper(STEPPER_STEPS, PIN_STEPPER_A1, PIN_STEPPER_A2, 
+Stepper stepper = Stepper(STEPPER_STEPS, PIN_STEPPER_A1, PIN_STEPPER_A2,
     PIN_STEPPER_B1, PIN_STEPPER_B2); // Stepper motor object
 
 // Deadband power level for sliders
@@ -62,12 +62,12 @@ bool isActive = true;
 void setup() {
     Wire.begin();
     Serial.begin(57600);
-    
+
     // Button
     pinMode(PIN_BUTTON, INPUT_PULLUP);
     pinMode(PIN_BUTTONGND, OUTPUT);
     digitalWrite(PIN_BUTTONGND, LOW);
-    
+
     // LED output pins
     pinMode(PIN_LED_RED, OUTPUT);
     pinMode(PIN_LED_GREEN, OUTPUT);
@@ -75,7 +75,7 @@ void setup() {
     analogWrite(PIN_LED_RED, 0);
     analogWrite(PIN_LED_GREEN, 0);
     analogWrite(PIN_LED_BLUE, 0);
-    
+
     // Saturation slider pins
     pinMode(PIN_S_SLIDER_IN1, OUTPUT);
     pinMode(PIN_S_SLIDER_IN2, OUTPUT);
@@ -83,7 +83,7 @@ void setup() {
     digitalWrite(PIN_S_SLIDER_IN1, LOW);
     digitalWrite(PIN_S_SLIDER_IN2, LOW);
     analogWrite(PIN_S_SLIDER_PWM, 0);
-    
+
     // Value slider pins
     pinMode(PIN_V_SLIDER_IN1, OUTPUT);
     pinMode(PIN_V_SLIDER_IN2, OUTPUT);
@@ -91,24 +91,24 @@ void setup() {
     digitalWrite(PIN_V_SLIDER_IN1, LOW);
     digitalWrite(PIN_V_SLIDER_IN2, LOW);
     analogWrite(PIN_V_SLIDER_PWM, 0);
-    
+
     // Stepper setup
     stepper.setSpeed(60);
-    
+
     // Initialize APDS-9960 (configure I2C and initial values)
     if ( apds.init() ) {
         Serial.println(F("APDS-9960 initialization complete"));
     } else {
         Serial.println(F("Something went wrong during APDS-9960 init!"));
     }
-    
+
     // Start running the APDS-9960 light sensor (no interrupts)
     if ( apds.enableLightSensor(false) ) {
         Serial.println(F("Light sensor is now running"));
     } else {
         Serial.println(F("Something went wrong during light sensor init!"));
     }
-    
+
     //Testing
     saturation = 128;
     brightness = 128;
@@ -120,12 +120,12 @@ void loop() {
     sensorValH = analogRead(ADC_H_RING);
     sensorValS = analogRead(ADC_S_SLIDER);
     sensorValB = analogRead(ADC_V_SLIDER);
-    
+
     //hue = (millis()/10) % 359;
     //saturation = (millis()/10) % 255;
     //brightness = (millis()/10) % 255;
     //Serial.println("Hue: " + String(sensorValH) + " Saturation: " + String(sensorValS) + " Brightness: " + String(sensorValB) + " isActive: " + String(isActive));
-    
+
     // Get current mode from button
     if(digitalRead(PIN_BUTTON) == LOW)
     {
@@ -135,18 +135,18 @@ void loop() {
     {
         isActive = true;
     }
-    
+
     if (isActive == true) // Actively display sensed color
     {
         // Get color from color sensor, save in hue,saturation,value variables
         if (  !apds.readAmbientLight(ambient_light) ||
             !apds.readRedLight(red_light) ||
         !apds.readGreenLight(green_light) ||
-        !apds.readBlueLight(blue_light) ) 
+        !apds.readBlueLight(blue_light) )
         {
             Serial.println("Error reading light values");
-        } 
-        else 
+        }
+        else
         {
             /*
             Serial.print("Ambient: ");
@@ -158,12 +158,12 @@ void loop() {
             Serial.print(" Blue: ");
             Serial.println(blue_light);
             */
-            
-            RGBtoHSV(map(red_light, 0,ambient_light,0,255), 
-                map(green_light, 0,ambient_light,0,255), 
+
+            RGBtoHSV(map(red_light, 0,ambient_light,0,255),
+                map(green_light, 0,ambient_light,0,255),
                 map(blue_light, 0,ambient_light,0,255));
             //Serial.println("Hue: " + String(hue) + " Saturation: " + String(saturation) + " Brightness: " + String(brightness));
-            
+
             //brightness = 255;
         }
 
@@ -172,7 +172,7 @@ void loop() {
             (int)((map(saturation, 0, 255, 0, 1023) - sensorValS) * slider_Kp));
         setSlider(PIN_V_SLIDER_IN1, PIN_V_SLIDER_IN2, PIN_V_SLIDER_PWM,
             (int)((map(brightness, 0, 255, 0, 1023) - sensorValB) * slider_Kp));
-        
+
         // Set dial
         stepperTarget = map(hue, 0, 359, 0, STEPPER_STEPS);
         if (stepperPosition < stepperTarget)
@@ -186,25 +186,25 @@ void loop() {
             stepperPosition += max(-3, stepperTarget - stepperPosition);
         }
         saturation = 255;
-        
-        
+
+
     }
     else // Let user set color
     {
-        
+
         if (sensorValH > 400)
         {
-          hue = map(sensorValH, 400, 1024, 0, 360);
+            hue = map(sensorValH, 400, 1024, 0, 360);
         }
         saturation = map(sensorValS, 0, 1024, 0, 255);
         brightness = map(sensorValB, 0, 1024, 0, 255);
         Serial.println("Hue: " + String(hue) + " Saturation: " + String(saturation) + " Brightness: " + String(brightness));
-        
+
         // Disable slider motors
         setSlider(PIN_S_SLIDER_IN1, PIN_S_SLIDER_IN2, PIN_S_SLIDER_PWM, 0);
         setSlider(PIN_V_SLIDER_IN1, PIN_V_SLIDER_IN2, PIN_V_SLIDER_PWM, 0);
     }
-    
+
     // Set color of leds
     HSVtoRGB(hue, brightness, saturation);
     analogWrite(PIN_LED_RED, 255 - rgb_colors[0]);
@@ -242,7 +242,7 @@ void setSlider(int pin_1, int pin_2, int pin_pwm, int value)
         digitalWrite(pin_1, LOW);
         digitalWrite(pin_2, HIGH);
     }
-    
+
     // Check bounds on pwmlevel
     if (pwmlevel > 100)
     {
@@ -317,11 +317,11 @@ void RGBtoHSV(int r_val, int g_val, int b_val)
 {
 	float r,g,b,h,s,v;
     float min, max, delta;
-    
+
     r = r_val / 255.0;
     g = g_val / 255.0;
     b = b_val / 255.0;
-    
+
 	min = min(min(r, g), b);
 	max = max(max(r, g), b);
 	v = max;				// v
