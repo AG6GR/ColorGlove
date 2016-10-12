@@ -1,4 +1,4 @@
-# ColorGlove
+# Palette
 
 <img src=/img/P1240320.jpg width="480">
 
