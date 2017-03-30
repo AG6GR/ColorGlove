@@ -1,1 +1,25 @@
-Pin Number,Type,Goes to,,Vslider0,,Button,,Controller Output A1,,,,2,,,,3,PWM,LED Red,,4,PWM,LED Green,,5,PWM,LED Blue,,6,PWM,,,7,,S Slider INA,Purple,Left Slider8,,S Slider INB,Blue,9,PWM,S Sider PWM,White,10,PWM,V Slider PWM,White,Right Slider11,,V Slider INB,Blue,12,,V Slider INA,Purple,13,,,,14,A0,S Slider Output,,Left Slider15,A1,V Slider Output,,Right Slider16,A2,H Ring Potentiometer,,17,A3,,,18,SDA,Color Sensor I2C,,19,SCL,Color Sensor I2C,,20,"A6, PWM",Stepper A1,White,21,"A7, PWM",Stepper A2,Orange,22,"A8, PWM",Stepper B1,White,23,"A9, PWM",Stepper B2,Blue,
+Pin Number,Type,Goes to,Color,Vslider
+0,,Button +,White,Controller Output A
+1,,Button -,Black,
+2,,,,
+3,PWM,LED Red,Red,
+4,PWM,LED Green,Green,
+5,PWM,LED Blue,Blue,
+6,PWM,S Slider INA,Purple,Left Slider
+7,,S Slider INB,Blue,
+8,,S Sider PWM,White,
+9,PWM,V Slider PWM,White,Right Slider
+10,PWM,V Slider INB,Blue,
+11,,V Slider INA,Purple,
+12,,,,
+13,,,,
+14,A0,S Slider Output,Yellow,Left Slider
+15,A1,V Slider Output,Yellow,Right Slider
+16,A2,H Ring Potentiometer,Yellow,
+17,A3,,,
+18,SDA,Color Sensor I2C,Blue,
+19,SCL,Color Sensor I2C,Yellow,
+20,"A6, PWM",Stepper A1,White,
+21,"A7, PWM",Stepper A2,Orange,
+22,"A8, PWM",Stepper B1,White,
+23,"A9, PWM",Stepper B2,Blue,
